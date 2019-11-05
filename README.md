@@ -2,9 +2,11 @@
 My personal skeleton for scala projects
 
 ## TODO
-- [ ] Formatting   
-- [ ] SBT Plugins   
-- [ ] Compiler Plugins   
+- [x] Formatting   
+- [x] SBT Plugins   
+- [x] Compiler Plugins   
+- [ ] Crossbuild
+- [ ] Protobuffer
 - [ ] CI/CD   
 - [ ] Library   
 - [ ] Learning resources   
