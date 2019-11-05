@@ -17,7 +17,7 @@ object Dependencies {
     val logback          = "1.2.1"
   }
 
-  object Libraries {
+  object Lib {
     lazy val cats         = "org.typelevel"  %% "cats-core"     % Versions.cats
     lazy val catsEffect   = "org.typelevel"  %% "cats-effect"   % Versions.catsEffect
     lazy val console4cats = "dev.profunktor" %% "console4cats"  % Versions.console4cats
