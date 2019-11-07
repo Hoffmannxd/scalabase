@@ -22,21 +22,21 @@ import config.AppEnvironment.Local
 import config.{ AppEnvironment, MultipleHost }
 import eu.timepit.refined.types.string.NonEmptyString
 
+final case class SeedNodesConfig private (hosts: List[String])
 
 object SeedNodesConfig {
 
-  private final case class SeedNodes (hosts: List[String])
 
-  def seedNodesConfig(environment: AppEnvironment = AppEnvironment.Local): ConfigValue[SeedNodes] = {
+  def seedNodesConfig(environment: AppEnvironment = AppEnvironment.Local): ConfigValue[SeedNodesConfig] = {
     environment match {
       case Local =>
         env("SEED_NODES")
           .as[NonEmptyString]
           .flatMap { sn =>
-            MultipleHost.hostRefined(sn.value).map(l => SeedNodes(l))
+            MultipleHost.hostRefined(sn.value).map(l => SeedNodesConfig(l))
           }
 
-      case _ => ConfigValue.default(SeedNodes(List.empty))
+      case _ => ConfigValue.default(SeedNodesConfig(List.empty))
     }
   }
 

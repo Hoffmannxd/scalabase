@@ -29,6 +29,7 @@ object Main extends IOApp {
   println(sayMyName)
 
   def run(args: List[String]): IO[ExitCode] = {
+    //SeedNodesConfig(List.empty)
     seedNodesConfig().load[IO].map(x => println(x)).as(ExitCode.Success)
   }
 }
