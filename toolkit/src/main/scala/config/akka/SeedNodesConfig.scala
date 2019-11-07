@@ -14,20 +14,23 @@
  * limitations under the License.
  */
 
-package utils
-import cats.effect.{ExitCode, IO, IOApp}
-import config.akka.SeedNodesConfig._
+package config.akka
 import cats.implicits._
+import ciris.refined._
+import ciris.{ConfigValue, _}
+import config.MultipleHost
+import eu.timepit.refined.types.string.NonEmptyString
 
-object Main extends IOApp {
- def sayMyName: String = {
-   //val k = 21
-   " aa"
- }
+object SeedNodesConfig {
 
-  println(sayMyName)
+  val seedNodeConfig: ConfigValue[SeedNodesConfig] =
+    env("SEED_NODES").as[NonEmptyString]
+      .flatMap{
+        sn => MultipleHost.hostRefined(sn.value).map(l => SeedNodesConfig(l))
+      }
+}
+final case class SeedNodesConfig(hosts: List[String]) {
 
-  def run(args: List[String]): IO[ExitCode] = {
-    seedNodeConfig.load[IO].map(x => println(x)).as(ExitCode.Success)
-  }
+  def formatted: String = this.hosts.map(x => s""""$x"""").mkString("[", ",", "]")
+
 }

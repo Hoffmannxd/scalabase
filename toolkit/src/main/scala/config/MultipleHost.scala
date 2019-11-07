@@ -16,14 +16,21 @@
 
 package config
 
-import enumeratum.{CirisEnum, Enum, EnumEntry}
+import ciris.{ConfigError, ConfigValue}
+import eu.timepit.refined.boolean.{And, Or}
+import eu.timepit.refined.collection.{Forall, NonEmpty}
+import eu.timepit.refined.refineV
+import eu.timepit.refined.string.{IPv4, Url}
 
-sealed trait AppEnvironment extends EnumEntry
+object MultipleHost {
+  type HostList = NonEmpty And Forall[Or[IPv4, Url]]
 
-object AppEnvironment extends Enum[AppEnvironment] with CirisEnum[AppEnvironment] {
-  case object Local extends AppEnvironment
-  case object Staging extends AppEnvironment
-  case object Production extends AppEnvironment
-
-  val values: IndexedSeq[AppEnvironment] = findValues
+  val hostRefined: String => ConfigValue[List[String]] = string => {
+    refineV[HostList](string.split(",").toList.map(_.replace(" ", "")))
+      .fold(
+        error => ConfigValue.failed[List[String]](ConfigError(error))
+        ,
+        correct => ConfigValue.default[List[String]](correct.value)
+      )
+  }
 }

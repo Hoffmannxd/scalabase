@@ -14,20 +14,15 @@
  * limitations under the License.
  */
 
-package utils
-import cats.effect.{ExitCode, IO, IOApp}
-import config.akka.SeedNodesConfig._
-import cats.implicits._
+package config
 
-object Main extends IOApp {
- def sayMyName: String = {
-   //val k = 21
-   " aa"
- }
+object Env {
 
-  println(sayMyName)
-
-  def run(args: List[String]): IO[ExitCode] = {
-    seedNodeConfig.load[IO].map(x => println(x)).as(ExitCode.Success)
+  def setEnv(key: String, value: String): String = {
+    val field = System.getenv().getClass.getDeclaredField("m")
+    field.setAccessible(true)
+    val map = field.get(System.getenv()).asInstanceOf[java.util.Map[java.lang.String, java.lang.String]]
+    map.put(key, value)
   }
+
 }
