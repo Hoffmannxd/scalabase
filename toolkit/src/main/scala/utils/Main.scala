@@ -18,7 +18,6 @@ package utils
 import cats.effect.{ExitCode, IO, IOApp}
 import config.akka.SeedNodesConfig._
 import cats.implicits._
-import config.akka.SeedNodesConfig
 
 object Main extends IOApp {
  def sayMyName: String = {
