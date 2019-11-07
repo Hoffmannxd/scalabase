@@ -15,20 +15,25 @@
  */
 
 package utils
-import cats.effect.{ExitCode, IO, IOApp}
+import cats.effect.{ ExitCode, IO, IOApp }
 import config.akka.SeedNodesConfig._
 import cats.implicits._
+import config.broker.Brokers.{ CassandraClient, KafkaClient }
 
 object Main extends IOApp {
- def sayMyName: String = {
-   //val k = 21
-   " aa"
- }
+  def sayMyName: String =
+    //val k = 21
+    " aa"
 
   println(sayMyName)
 
-  def run(args: List[String]): IO[ExitCode] = {
+  def run(args: List[String]): IO[ExitCode] =
     //SeedNodesConfig(List.empty)
-    seedNodesConfig().load[IO].map(x => println(x)).as(ExitCode.Success)
-  }
+    //CassandraClient.brokerConfig.load[IO].map(x => println(x)).as(ExitCode.Success)
+    for {
+      //cass <- CassandraClient.brokerConfig.load[IO]
+      kafka <- KafkaClient.brokerConfig.load[IO]
+    } yield {
+      ExitCode.Success
+    }
 }
