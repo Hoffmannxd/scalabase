@@ -17,20 +17,26 @@
 package config.akka
 import cats.implicits._
 import ciris.refined._
-import ciris.{ConfigValue, _}
-import config.MultipleHost
+import ciris.{ ConfigValue, _ }
+import config.AppEnvironment.Local
+import config.{ AppEnvironment, MultipleHost }
 import eu.timepit.refined.types.string.NonEmptyString
+
+final case class SeedNodesConfig(hosts: List[String])
 
 object SeedNodesConfig {
 
-  val seedNodeConfig: ConfigValue[SeedNodesConfig] =
-    env("SEED_NODES").as[NonEmptyString]
-      .flatMap{
-        sn => MultipleHost.hostRefined(sn.value).map(l => SeedNodesConfig(l))
-      }
-}
-final case class SeedNodesConfig(hosts: List[String]) {
+  def seedNodesConfig(environment: AppEnvironment = AppEnvironment.Local): ConfigValue[SeedNodesConfig] = {
+    environment match {
+      case Local =>
+        env("SEED_NODES")
+          .as[NonEmptyString]
+          .flatMap { sn =>
+            MultipleHost.hostRefined(sn.value).map(l => SeedNodesConfig(l))
+          }
 
-  def formatted: String = this.hosts.map(x => s""""$x"""").mkString("[", ",", "]")
+      case _ => ConfigValue.default(SeedNodesConfig(List.empty))
+    }
+  }
 
 }

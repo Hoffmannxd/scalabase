@@ -36,33 +36,32 @@ class HostConfigSpec extends AsyncFlatSpec with Matchers {
   val badUrl = "google.com"
   val goodUrl = "http://google.com"
 
-
   it should "Test non defined" in {
-    assertThrows[ConfigException](noFuture(seedNodeConfig.load[IO].unsafeToFuture()))
+    assertThrows[ConfigException](noFuture(seedNodesConfig().load[IO].unsafeToFuture()))
   }
 
   it should "Test defined buy empty" in {
     Env.setEnv("SEED_NODES","")
-    assertThrows[ConfigException](noFuture(seedNodeConfig.load[IO].unsafeToFuture()))
+    assertThrows[ConfigException](noFuture(seedNodesConfig().load[IO].unsafeToFuture()))
   }
 
   it should "Test bad ip" in {
     Env.setEnv("SEED_NODES",badIp)
-    assertThrows[ConfigException](noFuture(seedNodeConfig.load[IO].unsafeToFuture()))
+    assertThrows[ConfigException](noFuture(seedNodesConfig().load[IO].unsafeToFuture()))
   }
 
   it should "Test single correct" in {
     Env.setEnv("SEED_NODES",goodIp)
-    assert(noFuture(seedNodeConfig.load[IO].unsafeToFuture()).hosts == List(goodIp))
+    assert(noFuture(seedNodesConfig().load[IO].unsafeToFuture()).hosts == List(goodIp))
   }
 
   it should "Test list correct" in {
     Env.setEnv("SEED_NODES",s"$goodIp, $goodUrl")
-    assert(noFuture(seedNodeConfig.load[IO].unsafeToFuture()).hosts == List(goodIp,goodUrl))
+    assert(noFuture(seedNodesConfig().load[IO].unsafeToFuture()).hosts == List(goodIp,goodUrl))
   }
 
   it should "Test at least one incorrect" in {
     Env.setEnv("SEED_NODES",s"$goodIp, $badUrl")
-    assertThrows[ConfigException](noFuture(seedNodeConfig.load[IO].unsafeToFuture()))
+    assertThrows[ConfigException](noFuture(seedNodesConfig().load[IO].unsafeToFuture()))
   }
 }

@@ -28,6 +28,6 @@ object Main extends IOApp {
   println(sayMyName)
 
   def run(args: List[String]): IO[ExitCode] = {
-    seedNodeConfig.load[IO].map(x => println(x)).as(ExitCode.Success)
+    seedNodesConfig().load[IO].map(x => println(x)).as(ExitCode.Success)
   }
 }

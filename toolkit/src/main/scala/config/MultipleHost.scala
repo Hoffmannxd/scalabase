@@ -33,4 +33,7 @@ object MultipleHost {
         correct => ConfigValue.default[List[String]](correct.value)
       )
   }
+
+  def formatted: List[String] => String = hosts => hosts.map(x => s""""$x"""").mkString("[", ",", "]")
+
 }
