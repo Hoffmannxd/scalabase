@@ -1,4 +1,4 @@
-## Check pluguin updates
+## Check deps and plugins updates
 
 To enable sbt-updates check plugins updates we must add the addSbt(...) 
 command on the [global plugin file](https://github.com/rtimush/sbt-updates/issues/98)
