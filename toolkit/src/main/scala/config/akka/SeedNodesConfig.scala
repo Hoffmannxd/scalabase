@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 Hoffmann
+ * Copyright 2020 Hoffmann
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,10 +16,12 @@
 
 package config.akka
 import cats.implicits._
+import ciris.ConfigValue
+import ciris._
 import ciris.refined._
-import ciris.{ ConfigValue, _ }
+import config.AppEnvironment
 import config.AppEnvironment.Local
-import config.{ AppEnvironment, MultipleHost }
+import config.MultipleHost
 import eu.timepit.refined.types.string.NonEmptyString
 
 final case class SeedNodesConfig private (hosts: List[String])

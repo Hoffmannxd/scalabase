@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 Hoffmann
+ * Copyright 2020 Hoffmann
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,16 +16,14 @@
 
 package config
 
-import ciris.{ ConfigError, ConfigValue }
+import ciris.ConfigError
+import ciris.ConfigValue
 import config.CustomPredicates.HostList
-import eu.timepit.refined.boolean.{ And, Or }
-import eu.timepit.refined.collection.{ Forall, NonEmpty }
 import eu.timepit.refined.refineV
-import eu.timepit.refined.string.{ IPv4, Url }
 
 object MultipleHost {
 
-  final val hostRefined: String => ConfigValue[List[String]] = string => {
+  val hostRefined: String => ConfigValue[List[String]] = string => {
     refineV[HostList](string.split(",").toList.map(_.replace(" ", "")))
       .fold(
         error => ConfigValue.failed[List[String]](ConfigError(error)),

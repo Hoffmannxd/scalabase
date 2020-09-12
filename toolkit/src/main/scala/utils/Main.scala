@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 Hoffmann
+ * Copyright 2020 Hoffmann
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,16 +15,15 @@
  */
 
 package utils
-import cats.effect.{ ExitCode, IO, IOApp }
+import cats.effect.ExitCode
+import cats.effect.IO
+import cats.effect.IOApp
 //import config.akka.SeedNodesConfig._
 //import cats.implicits._
 //import config.broker.Brokers.{ CassandraClient, KafkaClient }
 
 object Main extends IOApp {
-  def sayMyName: String =
-    //val k = 21
-    " aa"
-
+  val sayMyName               = " aa"
   def run(args: List[String]): IO[ExitCode] =
     //SeedNodesConfig(List.empty)
     //CassandraClient.brokerConfig.load[IO].map(x => println(x)).as(ExitCode.Success)

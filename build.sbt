@@ -1,8 +1,7 @@
 import Dependencies._
 
-resolvers += Classpaths.sbtPluginReleases
-
-///
+ThisBuild / scalafixScalaBinaryVersion := "2.13"
+ThisBuild / scalafixDependencies += "com.github.liancheng" %% "organize-imports" % "0.4.0"
 
 lazy val rootProjectName   = "scalabase"
 lazy val toolKitModuleName = "toolkit"
@@ -33,21 +32,17 @@ lazy val toolKit =
             Lib.scalaTest
           ) ++ Lib.ConfigBundle
     )
-    .enablePlugins(AssemblyPlugin, AutomateHeaderPlugin, BuildInfoPlugin, TpolecatPlugin)
+    .enablePlugins(AssemblyPlugin, AutomateHeaderPlugin, BuildInfoPlugin)
+    .disablePlugins(TpolecatPlugin)
 
 lazy val settings =
   Seq(
     Compile / unmanagedSourceDirectories := Seq((Compile / scalaSource).value),
+    semanticdbEnabled := true,
+    semanticdbVersion := scalafixSemanticdb.revision,
+    scalafmtOnCompile := true,
     Test / unmanagedSourceDirectories := Seq((Test / scalaSource).value),
-    resolvers ++= Seq(
-          Resolver.defaultLocal,
-          Resolver.mavenLocal,
-          Resolver.mavenCentral,
-          Classpaths.typesafeReleases,
-          Classpaths.sbtPluginReleases
-        ),
     scalaVersion := scala213,
-    //crossScalaVersions := List(scala213),//supportedScalaVersions,
     version := "0.0.1",
     organization := "me.mhoffmann",
     organizationName := "Hoffmann",
@@ -63,17 +58,32 @@ lazy val settings =
           )
         ),
     parallelExecution in Test := false,
-    scalacOptions := scalacOptionsVersion(scalaVersion.value)
+    scalacOptions += "-Ywarn-unused"
   )
 
-def scalacOptionsVersion(scalaVersion: String): Seq[String] =
-  CrossVersion.partialVersion(scalaVersion) match {
-    case Some((2L, major)) if major == 13L => Seq("-Ymacro-annotations")
-    case _                                 => Seq.empty
-  }
+//def scalacOptionsVersion(scalaVersion: String): Seq[String] =
+//  CrossVersion.partialVersion(scalaVersion) match {
+//    case Some((2L, major)) if major == 13L => Seq("-Ymacro-annotations")
+//    case _                                 => Seq.empty
+//  }
 
 val stages = List("/compile", "/test", "/assembly", "/publishLocal")
 
 addCommandAlias("publishAll", stages.map(s => toolKitModuleName + s).mkString(";+ ", ";+", ""))
 addCommandAlias("slibs", "show libraryDependencies")
 addCommandAlias("checkdeps", ";dependencyUpdates; reload plugins; dependencyUpdates; reload return")
+addCommandAlias("fmt", "scalafmtAll")
+addCommandAlias("prepare", "fix; fmt ; reload")
+addCommandAlias("fix", "all compile:scalafix test:scalafix")
+addCommandAlias(
+  "fixCheck",
+  "; compile:scalafix --check ; test:scalafix --check"
+)
+
+resolvers in ThisBuild ++= Seq(
+  Resolver.defaultLocal,
+  Resolver.mavenLocal,
+  Resolver.mavenCentral,
+  Classpaths.typesafeReleases,
+  Classpaths.sbtPluginReleases
+)

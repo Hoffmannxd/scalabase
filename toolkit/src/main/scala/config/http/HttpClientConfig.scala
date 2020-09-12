@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 Hoffmann
+ * Copyright 2020 Hoffmann
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,17 +16,11 @@
 
 package config.http
 
-import ciris.{ env, ConfigValue }
-import config.CustomPredicates.Port
-import eu.timepit.refined.types.string.NonEmptyString
 import cats.implicits._
-import ciris.{ env, ConfigValue }
+import ciris.ConfigValue
+import ciris.env
 import ciris.refined._
 import config.CustomPredicates.Port
-import config.{ broker, MultipleHost }
-import enumeratum.{ CirisEnum, Enum, EnumEntry }
-import eu.timepit.refined.auto._
-import eu.timepit.refined.cats._
 import eu.timepit.refined.types.string.NonEmptyString
 
 case class HttpClientConfig(host: NonEmptyString, port: Port)

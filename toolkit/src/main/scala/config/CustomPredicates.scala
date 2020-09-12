@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 Hoffmann
+ * Copyright 2020 Hoffmann
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,10 +18,13 @@ package config
 
 import ciris.Secret
 import eu.timepit.refined.api.Refined
-import eu.timepit.refined.boolean.{ And, Or }
-import eu.timepit.refined.collection.{ Forall, NonEmpty }
+import eu.timepit.refined.boolean.And
+import eu.timepit.refined.boolean.Or
+import eu.timepit.refined.collection.Forall
+import eu.timepit.refined.collection.NonEmpty
 import eu.timepit.refined.numeric.Positive
-import eu.timepit.refined.string.{ IPv4, Url }
+import eu.timepit.refined.string.IPv4
+import eu.timepit.refined.string.Url
 import eu.timepit.refined.types.string.NonEmptyString
 
 object CustomPredicates {

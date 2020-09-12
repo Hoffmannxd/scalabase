@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 Hoffmann
+ * Copyright 2020 Hoffmann
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,11 +17,15 @@
 package config.broker
 
 import cats.implicits._
-import ciris.{ env, ConfigValue }
+import ciris.ConfigValue
+import ciris.env
 import ciris.refined._
 import config.CustomPredicates.Port
-import config.{ broker, MultipleHost }
-import enumeratum.{ CirisEnum, Enum, EnumEntry }
+import config.MultipleHost
+import config.broker
+import enumeratum.CirisEnum
+import enumeratum.Enum
+import enumeratum.EnumEntry
 import eu.timepit.refined.auto._
 import eu.timepit.refined.cats._
 import eu.timepit.refined.types.string.NonEmptyString
