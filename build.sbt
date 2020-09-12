@@ -3,10 +3,9 @@ import Dependencies._
 lazy val rootProjectName   = "scalabase"
 lazy val toolKitModuleName = "toolkit"
 
-lazy val scala211               = "2.11.12"
-lazy val scala212               = "2.12.10"
-lazy val scala213               = "2.13.1"
-lazy val supportedScalaVersions = List(scala211, scala212, scala213)
+lazy val scala212               = "2.12.12"
+lazy val scala213               = "2.13.3"
+lazy val supportedScalaVersions = List(scala212, scala213)
 
 lazy val root =
   project
@@ -49,11 +48,16 @@ lazy val settings =
     version := "0.0.1",
     organization := "me.mhoffmann",
     organizationName := "Hoffmann",
-    startYear := Some(2019),
+    startYear := Some(2020),
     licenses := List("Apache-2.0" -> url("http://www.apache.org/licenses/LICENSE-2.0")),
     homepage := Some(url("https://me.hoffmann")),
     developers := List(
-      Developer(id = "hoffmannxd", name = "Matheus Hoffmann", email = "", url = url("https://github.com/hoffmannxd"))
+      Developer(
+        id = "h0ffmann",
+        name = "Matheus Hoffmann",
+        email = "hoffmann [at] poli.ufrj.br",
+        url = url("https://github.com/h0ffmann")
+      )
     ),
     parallelExecution in Test := false,
     scalacOptions := scalacOptionsVersion(scalaVersion.value)

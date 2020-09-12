@@ -26,8 +26,7 @@ final case class SeedNodesConfig private (hosts: List[String])
 
 object SeedNodesConfig {
 
-
-  def seedNodesConfig(environment: AppEnvironment = AppEnvironment.Local): ConfigValue[SeedNodesConfig] = {
+  def seedNodesConfig(environment: AppEnvironment = AppEnvironment.Local): ConfigValue[SeedNodesConfig] =
     environment match {
       case Local =>
         env("SEED_NODES")
@@ -38,6 +37,5 @@ object SeedNodesConfig {
 
       case _ => ConfigValue.default(SeedNodesConfig(List.empty))
     }
-  }
 
 }

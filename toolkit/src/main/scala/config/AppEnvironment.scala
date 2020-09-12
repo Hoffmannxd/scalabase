@@ -16,7 +16,7 @@
 
 package config
 
-import enumeratum.{CirisEnum, Enum, EnumEntry}
+import enumeratum.{ CirisEnum, Enum, EnumEntry }
 
 sealed trait AppEnvironment extends EnumEntry
 

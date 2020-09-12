@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 Hoffmann
+ * Copyright 2020 Hoffmann
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,14 +16,14 @@
 
 package config
 
-import cats.effect.{ContextShift, IO}
+import cats.effect.{ ContextShift, IO }
 import ciris.ConfigException
 import org.scalatest.flatspec.AsyncFlatSpec
 import config.akka.SeedNodesConfig._
 import org.scalatest.matchers.must.Matchers
 
 import scala.concurrent.duration.Duration
-import scala.concurrent.{Await, Future}
+import scala.concurrent.{ Await, Future }
 
 class HostConfigSpec extends AsyncFlatSpec with Matchers {
 
@@ -31,9 +31,9 @@ class HostConfigSpec extends AsyncFlatSpec with Matchers {
 
   def noFuture[T](f: Future[T]): T = Await.result(f, Duration.Inf)
 
-  val badIp = "10.233.244.333"
-  val goodIp = "10.255.254.10"
-  val badUrl = "google.com"
+  val badIp   = "10.233.244.333"
+  val goodIp  = "10.255.254.10"
+  val badUrl  = "google.com"
   val goodUrl = "http://google.com"
 
   it should "Test non defined" in {
@@ -41,27 +41,27 @@ class HostConfigSpec extends AsyncFlatSpec with Matchers {
   }
 
   it should "Test defined buy empty" in {
-    Env.setEnv("SEED_NODES","")
+    Env.setEnv("SEED_NODES", "")
     assertThrows[ConfigException](noFuture(seedNodesConfig().load[IO].unsafeToFuture()))
   }
 
   it should "Test bad ip" in {
-    Env.setEnv("SEED_NODES",badIp)
+    Env.setEnv("SEED_NODES", badIp)
     assertThrows[ConfigException](noFuture(seedNodesConfig().load[IO].unsafeToFuture()))
   }
 
   it should "Test single correct" in {
-    Env.setEnv("SEED_NODES",goodIp)
+    Env.setEnv("SEED_NODES", goodIp)
     assert(noFuture(seedNodesConfig().load[IO].unsafeToFuture()).hosts == List(goodIp))
   }
 
   it should "Test list correct" in {
-    Env.setEnv("SEED_NODES",s"$goodIp, $goodUrl")
-    assert(noFuture(seedNodesConfig().load[IO].unsafeToFuture()).hosts == List(goodIp,goodUrl))
+    Env.setEnv("SEED_NODES", s"$goodIp, $goodUrl")
+    assert(noFuture(seedNodesConfig().load[IO].unsafeToFuture()).hosts == List(goodIp, goodUrl))
   }
 
   it should "Test at least one incorrect" in {
-    Env.setEnv("SEED_NODES",s"$goodIp, $badUrl")
+    Env.setEnv("SEED_NODES", s"$goodIp, $badUrl")
     assertThrows[ConfigException](noFuture(seedNodesConfig().load[IO].unsafeToFuture()))
   }
 }

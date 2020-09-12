@@ -16,20 +16,19 @@
 
 package config
 
-import ciris.{ConfigError, ConfigValue}
+import ciris.{ ConfigError, ConfigValue }
 import config.CustomPredicates.HostList
-import eu.timepit.refined.boolean.{And, Or}
-import eu.timepit.refined.collection.{Forall, NonEmpty}
+import eu.timepit.refined.boolean.{ And, Or }
+import eu.timepit.refined.collection.{ Forall, NonEmpty }
 import eu.timepit.refined.refineV
-import eu.timepit.refined.string.{IPv4, Url}
+import eu.timepit.refined.string.{ IPv4, Url }
 
 object MultipleHost {
 
   final val hostRefined: String => ConfigValue[List[String]] = string => {
     refineV[HostList](string.split(",").toList.map(_.replace(" ", "")))
       .fold(
-        error => ConfigValue.failed[List[String]](ConfigError(error))
-        ,
+        error => ConfigValue.failed[List[String]](ConfigError(error)),
         correct => ConfigValue.default[List[String]](correct.value)
       )
   }
