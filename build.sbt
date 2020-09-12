@@ -1,5 +1,9 @@
 import Dependencies._
 
+resolvers += Classpaths.sbtPluginReleases
+
+///
+
 lazy val rootProjectName   = "scalabase"
 lazy val toolKitModuleName = "toolkit"
 
@@ -13,7 +17,6 @@ lazy val root =
     .withId(rootProjectName)
     .aggregate(toolKit)
     .settings(
-      // crossScalaVersions must be set to Nil on the aggregating project
       crossScalaVersions := Nil,
       publish / skip := true
     )
@@ -25,10 +28,10 @@ lazy val toolKit =
     .settings(settings)
     .settings(
       libraryDependencies ++= Seq(
-        compilerPlugin(Lib.kindProjector),
-        compilerPlugin(Lib.betterMonadicFor),
-        Lib.scalaTest
-      ) ++ Lib.CONFIG
+            compilerPlugin(Lib.kindProjector),
+            compilerPlugin(Lib.betterMonadicFor),
+            Lib.scalaTest
+          ) ++ Lib.ConfigBundle
     )
     .enablePlugins(AssemblyPlugin, AutomateHeaderPlugin, BuildInfoPlugin, TpolecatPlugin)
 
@@ -37,12 +40,12 @@ lazy val settings =
     Compile / unmanagedSourceDirectories := Seq((Compile / scalaSource).value),
     Test / unmanagedSourceDirectories := Seq((Test / scalaSource).value),
     resolvers ++= Seq(
-      Resolver.defaultLocal,
-      Resolver.mavenLocal,
-      Resolver.mavenCentral,
-      Classpaths.typesafeReleases,
-      Classpaths.sbtPluginReleases
-    ),
+          Resolver.defaultLocal,
+          Resolver.mavenLocal,
+          Resolver.mavenCentral,
+          Classpaths.typesafeReleases,
+          Classpaths.sbtPluginReleases
+        ),
     scalaVersion := scala213,
     //crossScalaVersions := List(scala213),//supportedScalaVersions,
     version := "0.0.1",
@@ -52,13 +55,13 @@ lazy val settings =
     licenses := List("Apache-2.0" -> url("http://www.apache.org/licenses/LICENSE-2.0")),
     homepage := Some(url("https://me.hoffmann")),
     developers := List(
-      Developer(
-        id = "h0ffmann",
-        name = "Matheus Hoffmann",
-        email = "hoffmann [at] poli.ufrj.br",
-        url = url("https://github.com/h0ffmann")
-      )
-    ),
+          Developer(
+            id = "h0ffmann",
+            name = "Matheus Hoffmann",
+            email = "hoffmann [at] poli.ufrj.br",
+            url = url("https://github.com/h0ffmann")
+          )
+        ),
     parallelExecution in Test := false,
     scalacOptions := scalacOptionsVersion(scalaVersion.value)
   )
@@ -70,4 +73,7 @@ def scalacOptionsVersion(scalaVersion: String): Seq[String] =
   }
 
 val stages = List("/compile", "/test", "/assembly", "/publishLocal")
+
 addCommandAlias("publishAll", stages.map(s => toolKitModuleName + s).mkString(";+ ", ";+", ""))
+addCommandAlias("slibs", "show libraryDependencies")
+addCommandAlias("checkdeps", ";dependencyUpdates; reload plugins; dependencyUpdates; reload return")
