@@ -3,12 +3,47 @@ import Dependencies._
 ThisBuild / scalafixScalaBinaryVersion := "2.13"
 ThisBuild / scalafixDependencies += "com.github.liancheng" %% "organize-imports" % "0.4.0"
 
-lazy val rootProjectName   = "scalabase"
-lazy val toolKitModuleName = "toolkit"
+/// Dependencies
 
-lazy val scala212               = "2.12.12"
-lazy val scala213               = "2.13.3"
-lazy val supportedScalaVersions = List(scala212, scala213)
+val AkkaVersion        = "2.6.8"
+val AkkaHttpVersion    = "10.2.0"
+val AkkaMetricsVersion = "1.2.0"
+val TapirVersion       = "0.17.0-M1"
+val PrometheusVersion  = "0.0.9"
+
+val loggingDependencies = Seq(
+  "com.typesafe.scala-logging" %% "scala-logging"  % "3.9.2",
+  "ch.qos.logback"             % "logback-classic" % "1.2.3",
+  "org.codehaus.janino"        % "janino"          % "3.1.2"
+)
+
+val monitoringDependencies = Seq(
+  "io.prometheus" % "simpleclient"                  % PrometheusVersion,
+  "io.prometheus" % "simpleclient_hotspot"          % PrometheusVersion,
+  "fr.davit"      %% "akka-http-metrics-core"       % AkkaMetricsVersion,
+  "fr.davit"      %% "akka-http-metrics-prometheus" % AkkaMetricsVersion
+)
+
+val httpDependencies = Seq(
+  "com.typesafe.akka" %% "akka-stream" % AkkaVersion,
+  "com.typesafe.akka" %% "akka-http"   % AkkaHttpVersion
+)
+
+val tapir = Seq(
+  "com.softwaremill.sttp.tapir" %% "tapir-akka-http-server"   % TapirVersion,
+  "com.softwaremill.sttp.tapir" %% "tapir-core"               % TapirVersion,
+  "com.softwaremill.sttp.tapir" %% "tapir-openapi-docs"       % TapirVersion,
+  "com.softwaremill.sttp.tapir" %% "tapir-openapi-circe-yaml" % TapirVersion
+)
+
+val serverDependencies = loggingDependencies ++ httpDependencies ++ monitoringDependencies ++ tapir
+
+/// Projects
+
+val rootProjectName     = "scalabase"
+val toolKitModuleName   = "toolkit"
+val serverModuleName    = "server"
+val currentScalaVersion = "2.13.3"
 
 lazy val root =
   project
@@ -32,20 +67,27 @@ lazy val toolKit =
             Lib.scalaTest
           ) ++ Lib.ConfigBundle
     )
-    .enablePlugins(AssemblyPlugin, AutomateHeaderPlugin, BuildInfoPlugin)
-    .disablePlugins(TpolecatPlugin)
+    .enablePlugins(AutomateHeaderPlugin, BuildInfoPlugin)
+
+lazy val server =
+  project
+    .in(file(serverModuleName))
+    .withId(serverModuleName)
+    .settings(settings)
+    .settings(libraryDependencies ++= serverDependencies)
+    .enablePlugins(AutomateHeaderPlugin, BuildInfoPlugin)
 
 lazy val settings =
   Seq(
     Compile / unmanagedSourceDirectories := Seq((Compile / scalaSource).value),
     semanticdbEnabled := true,
-    semanticdbVersion := scalafixSemanticdb.revision,
     scalafmtOnCompile := true,
+    semanticdbVersion := scalafixSemanticdb.revision,
     Test / unmanagedSourceDirectories := Seq((Test / scalaSource).value),
-    scalaVersion := scala213,
+    scalaVersion := currentScalaVersion,
     version := "0.0.1",
     organization := "me.mhoffmann",
-    organizationName := "Hoffmann",
+    organizationName := "Matheus Hoffmann",
     startYear := Some(2020),
     licenses := List("Apache-2.0" -> url("http://www.apache.org/licenses/LICENSE-2.0")),
     homepage := Some(url("https://me.hoffmann")),
@@ -60,12 +102,6 @@ lazy val settings =
     parallelExecution in Test := false,
     scalacOptions += "-Ywarn-unused"
   )
-
-//def scalacOptionsVersion(scalaVersion: String): Seq[String] =
-//  CrossVersion.partialVersion(scalaVersion) match {
-//    case Some((2L, major)) if major == 13L => Seq("-Ymacro-annotations")
-//    case _                                 => Seq.empty
-//  }
 
 val stages = List("/compile", "/test", "/assembly", "/publishLocal")
 

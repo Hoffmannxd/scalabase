@@ -13,6 +13,12 @@ object Dependencies {
 
     val scalaTest = "3.2.2"
     val logback   = "1.2.1"
+
+    val AkkaVersion        = "2.6.8"
+    val AkkaHttpVersion    = "10.2.0"
+    val AkkaMetricsVersion = "1.2.0"
+    val TapirVersion       = "0.17.0-M1"
+    val PrometheusVersion  = "0.0.9"
   }
 
   object Lib {
