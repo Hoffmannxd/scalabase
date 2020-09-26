@@ -14,10 +14,18 @@
  * limitations under the License.
  */
 
-package config.broker
+package utils
 
-import ciris.Secret
-import config.CustomPredicates.Port
-import eu.timepit.refined.types.string.NonEmptyString
+import me.hoffmann.version.BuildInfo
+import sttp.tapir.Endpoint
+import sttp.tapir.docs.openapi._
+import sttp.tapir.openapi.circe.yaml.RichOpenAPI
 
-case class BrokerConfig(hosts: List[String], port: Port, user: NonEmptyString, password: Secret[NonEmptyString])
+object Docs {
+  def show(ep: Endpoint[_, _, _, _]): Unit = {
+    val openapi = List(ep).toOpenAPI("Sample docs", BuildInfo.version)
+    val yaml    = openapi.toYaml
+    println(yaml)
+  }
+
+}

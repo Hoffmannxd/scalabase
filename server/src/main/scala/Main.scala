@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Hoffmann
+ * Copyright 2020 Matheus Hoffmann
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import _root_.metrics.Metrics
+import _root_.metrics.{ Metrics, VersionRoute }
 import akka.actor.{ ActorSystem, CoordinatedShutdown }
 import akka.http.scaladsl.Http
 import akka.http.scaladsl.model.StatusCode
@@ -52,7 +52,7 @@ object Main extends App with LazyLogging {
   val routeMetrics = (get & path("metrics"))(metrics(registry))
   val routeReady   = (get & path("ready"))(complete("Im ready"))
 
-  val allRoutes = List(routeMetrics, routeReady)
+  val allRoutes = List(routeMetrics, routeReady, new VersionRoute().r)
     .reduce(_ ~ _)
 
   Http()

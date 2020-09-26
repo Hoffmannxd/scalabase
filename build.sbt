@@ -1,7 +1,30 @@
 import Dependencies._
+import sbtbuildinfo.BuildInfoKey.action
+
+import scala.util.Try
 
 ThisBuild / scalafixScalaBinaryVersion := "2.13"
 ThisBuild / scalafixDependencies += "com.github.liancheng" %% "organize-imports" % "0.4.0"
+
+/// Meta
+
+lazy val buildInfoSettings = Seq(
+  buildInfoKeys := Seq[BuildInfoKey](
+        name,
+        version,
+        scalaVersion,
+        sbtVersion,
+        action("lastCommitHash") {
+          import scala.sys.process._
+          Try("git rev-parse HEAD".!!.trim).getOrElse("?")
+        }
+      ),
+  buildInfoOptions += BuildInfoOption.BuildTime,
+  buildInfoOptions += BuildInfoOption.ToJson,
+  buildInfoOptions += BuildInfoOption.ToMap,
+  buildInfoPackage := "me.hoffmann.version",
+  buildInfoObject := "BuildInfo"
+)
 
 /// Dependencies
 
@@ -30,10 +53,12 @@ val httpDependencies = Seq(
 )
 
 val tapir = Seq(
-  "com.softwaremill.sttp.tapir" %% "tapir-akka-http-server"   % TapirVersion,
-  "com.softwaremill.sttp.tapir" %% "tapir-core"               % TapirVersion,
-  "com.softwaremill.sttp.tapir" %% "tapir-openapi-docs"       % TapirVersion,
-  "com.softwaremill.sttp.tapir" %% "tapir-openapi-circe-yaml" % TapirVersion
+  "com.softwaremill.sttp.tapir" %% "tapir-akka-http-server"     % TapirVersion,
+  "com.softwaremill.sttp.tapir" %% "tapir-core"                 % TapirVersion,
+  "com.softwaremill.sttp.tapir" %% "tapir-json-circe"           % TapirVersion,
+  "com.softwaremill.sttp.tapir" %% "tapir-openapi-docs"         % TapirVersion,
+  "com.softwaremill.sttp.tapir" %% "tapir-openapi-circe-yaml"   % TapirVersion,
+  "com.softwaremill.sttp.tapir" %% "tapir-swagger-ui-akka-http" % TapirVersion
 )
 
 val serverDependencies = loggingDependencies ++ httpDependencies ++ monitoringDependencies ++ tapir
@@ -76,6 +101,7 @@ lazy val server =
     .settings(settings)
     .settings(libraryDependencies ++= serverDependencies)
     .enablePlugins(AutomateHeaderPlugin, BuildInfoPlugin)
+    .settings(buildInfoSettings)
 
 lazy val settings =
   Seq(

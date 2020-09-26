@@ -14,10 +14,14 @@
  * limitations under the License.
  */
 
-package config.broker
+package serde
 
-import ciris.Secret
-import config.CustomPredicates.Port
-import eu.timepit.refined.types.string.NonEmptyString
+import io.circe.{ Decoder, Encoder }
+import metrics.VersionRoute.VersionDeployed
+import io.circe.generic.semiauto._
 
-case class BrokerConfig(hosts: List[String], port: Port, user: NonEmptyString, password: Secret[NonEmptyString])
+object Json {
+
+  implicit val vDeployedDecoder: Decoder[VersionDeployed] = deriveDecoder[VersionDeployed]
+  implicit val vDeployedEncoder: Encoder[VersionDeployed] = deriveEncoder[VersionDeployed]
+}
