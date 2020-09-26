@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package utils
+package me.hoffmann.utils
 
 import me.hoffmann.version.BuildInfo
 import sttp.tapir.Endpoint

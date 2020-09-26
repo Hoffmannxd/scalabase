@@ -41,10 +41,10 @@ val loggingDependencies = Seq(
 )
 
 val monitoringDependencies = Seq(
-  "io.prometheus" % "simpleclient"                  % PrometheusVersion,
-  "io.prometheus" % "simpleclient_hotspot"          % PrometheusVersion,
-  "fr.davit"      %% "akka-http-metrics-core"       % AkkaMetricsVersion,
-  "fr.davit"      %% "akka-http-metrics-prometheus" % AkkaMetricsVersion
+  "io.prometheus" % "simpleclient"                              % PrometheusVersion,
+  "io.prometheus" % "simpleclient_hotspot"                      % PrometheusVersion,
+  "fr.davit"      %% "akka-http-me.hoffmann.metrics-core"       % AkkaMetricsVersion,
+  "fr.davit"      %% "akka-http-me.hoffmann.metrics-prometheus" % AkkaMetricsVersion
 )
 
 val httpDependencies = Seq(

@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
-package serde
+package me.hoffmann.serde
 
 import io.circe.{ Decoder, Encoder }
-import metrics.VersionRoute.VersionDeployed
+import me.hoffmann.metrics.VersionRoute.VersionDeployed
 import io.circe.generic.semiauto._
 
 object Json {

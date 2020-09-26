@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package metrics
+package me.hoffmann.metrics
 import fr.davit.akka.http.metrics.prometheus.{ PrometheusRegistry, PrometheusSettings }
 import io.prometheus.client.{ hotspot, CollectorRegistry }
 object Metrics {

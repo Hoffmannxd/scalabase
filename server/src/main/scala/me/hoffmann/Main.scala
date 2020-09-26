@@ -14,18 +14,23 @@
  * limitations under the License.
  */
 
-import _root_.metrics.{ Metrics, VersionRoute }
+package me.hoffmann
+
 import akka.actor.{ ActorSystem, CoordinatedShutdown }
 import akka.http.scaladsl.Http
-import akka.http.scaladsl.model.StatusCode
-import akka.http.scaladsl.server.Directives.{ complete, get, path, _ }
+import akka.http.scaladsl.server.Directives.{ complete, get, path }
 import com.typesafe.scalalogging.LazyLogging
-import fr.davit.akka.http.metrics.core.HttpMetrics._
 import fr.davit.akka.http.metrics.core.scaladsl.server.HttpMetricsDirectives.metrics
+import me.hoffmann.metrics.{ Metrics, VersionRoute }
 import fr.davit.akka.http.metrics.prometheus.marshalling.PrometheusMarshallers._
 
 import scala.concurrent.ExecutionContext
+import scala.concurrent.duration.FiniteDuration
 import scala.concurrent.duration._
+import akka.http.scaladsl.server.Directives._
+import fr.davit.akka.http.metrics.core.HttpMetrics.enrichHttp
+import fr.davit.akka.http.metrics.core.scaladsl.server.HttpMetricsDirectives._
+
 import scala.util.{ Failure, Success }
 
 object Main extends App with LazyLogging {
@@ -49,7 +54,7 @@ object Main extends App with LazyLogging {
   implicit val ec: ExecutionContext = system.dispatcher
 
   //var ready : Boolean = false
-  val routeMetrics = (get & path("metrics"))(metrics(registry))
+  val routeMetrics = (get & path("me/hoffmann/metrics"))(metrics(registry))
   val routeReady   = (get & path("ready"))(complete("Im ready"))
 
   val allRoutes = List(routeMetrics, routeReady, new VersionRoute().r)

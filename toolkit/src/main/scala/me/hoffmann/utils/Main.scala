@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package utils
+package me.hoffmann.utils
 import cats.effect.ExitCode
 import cats.effect.IO
 import cats.effect.IOApp
