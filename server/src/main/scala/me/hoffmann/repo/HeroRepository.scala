@@ -14,11 +14,13 @@
  * limitations under the License.
  */
 
-package me.hoffmann.metrics
-import fr.davit.akka.http.metrics.prometheus.{ PrometheusRegistry, PrometheusSettings }
-import io.prometheus.client.{ hotspot, CollectorRegistry }
+package me.hoffmann.repo
 
-object Metrics {
-  def init(label: String): Unit = {}
+import me.hoffmann.model.Domain.Hero
+import scala.languageFeature.higherKinds
 
+trait HeroRepository[F[_]] {
+
+  def getHero(name: String): F[Option[Hero]]
+  def insertHero(hero: Hero): F[Unit]
 }

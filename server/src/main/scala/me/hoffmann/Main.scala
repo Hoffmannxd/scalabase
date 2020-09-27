@@ -30,31 +30,45 @@ import scala.concurrent.duration._
 import akka.http.scaladsl.server.Directives._
 import fr.davit.akka.http.metrics.core.HttpMetrics.enrichHttp
 import fr.davit.akka.http.metrics.core.scaladsl.server.HttpMetricsDirectives._
+import fr.davit.akka.http.metrics.prometheus.{ PrometheusRegistry, PrometheusSettings }
+import io.prometheus.client.{ hotspot, CollectorRegistry }
+import pureconfig.{ loadConfigOrThrow, ConfigSource }
+import pureconfig.generic.auto._
 
 import scala.util.{ Failure, Success }
 
 object Main extends App with LazyLogging {
+  case class PetStoreConfig(hostname: String, port: Int)
   private final object BindFailure extends CoordinatedShutdown.Reason
 
   private val name = "pet_store"
-
+  println(System.getenv("POTATO"))
   //TODO
   //val cluster: ActorRef[ClusterStateSubscription]
-
+  val config = ConfigSource.default.at("server.api").loadOrThrow[PetStoreConfig]
   // Config
   val host: String                        = "0.0.0.0"
   val port: Int                           = 8080
   val terminationDeadline: FiniteDuration = 10.seconds
 
   // Readiness
+  hotspot.DefaultExports.initialize()
 
-  val registry                      = Metrics.init(name)
+  val prometheus: CollectorRegistry = CollectorRegistry.defaultRegistry
+  val settings: PrometheusSettings = PrometheusSettings.default
+    .withNamespace("abcssd")
+    .withIncludeMethodDimension(true)
+    .withIncludePathDimension(true)
+    .withIncludeStatusDimension(true)
+    .withDefineError(_.status.isFailure)
+
+  val registry                      = PrometheusRegistry(prometheus, settings)
   implicit val system: ActorSystem  = ActorSystem("system")
   val shutdown                      = CoordinatedShutdown(system)
   implicit val ec: ExecutionContext = system.dispatcher
 
   //var ready : Boolean = false
-  val routeMetrics = (get & path("me/hoffmann/metrics"))(metrics(registry))
+  val routeMetrics = (get & path("metrics"))(metrics(registry))
   val routeReady   = (get & path("ready"))(complete("Im ready"))
 
   val allRoutes = List(routeMetrics, routeReady, new VersionRoute().r)

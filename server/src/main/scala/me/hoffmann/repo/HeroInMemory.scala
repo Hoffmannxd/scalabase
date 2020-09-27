@@ -14,11 +14,22 @@
  * limitations under the License.
  */
 
-package me.hoffmann.metrics
-import fr.davit.akka.http.metrics.prometheus.{ PrometheusRegistry, PrometheusSettings }
-import io.prometheus.client.{ hotspot, CollectorRegistry }
+package me.hoffmann.repo
 
-object Metrics {
-  def init(label: String): Unit = {}
+import me.hoffmann.model.Domain
 
+import scala.collection.mutable
+import scala.concurrent.Future
+
+class HeroInMemory extends HeroRepository[Future] {
+
+  private var currentHero: mutable.Seq[Domain.Hero] = mutable.Seq.empty[Domain.Hero]
+
+  override def getHero(name: String): Future[Option[Domain.Hero]] =
+    Future.successful(currentHero.find(_.name == name))
+
+  override def insertHero(hero: Domain.Hero): Future[Unit] =
+    Future.successful {
+      currentHero = currentHero :+ hero
+    }
 }

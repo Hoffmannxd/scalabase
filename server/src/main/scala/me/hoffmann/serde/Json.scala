@@ -16,9 +16,9 @@
 
 package me.hoffmann.serde
 
+import io.circe.generic.semiauto.{ deriveDecoder, deriveEncoder }
 import io.circe.{ Decoder, Encoder }
 import me.hoffmann.metrics.VersionRoute.VersionDeployed
-import io.circe.generic.semiauto._
 
 object Json {
 

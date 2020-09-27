@@ -14,11 +14,20 @@
  * limitations under the License.
  */
 
-package me.hoffmann.metrics
-import fr.davit.akka.http.metrics.prometheus.{ PrometheusRegistry, PrometheusSettings }
-import io.prometheus.client.{ hotspot, CollectorRegistry }
+package me.hoffmann.model
 
-object Metrics {
-  def init(label: String): Unit = {}
+import me.hoffmann.model.validation.ValidationModel.Validatable
 
+object Domain {
+
+  // DATA
+  final case class Hero(name: String, genericClass: String, averageSpeed: Double, varSpeed: Double)
+
+  final case class Skill(key: String, dmg: Double, cooldown: Double, range: Long)
+
+  //IN
+  final case class NewHeroReq(name: String, genericClass: String, averageSpeed: Double, varSpeed: Double)
+
+  //OUT
+  final case class HeroSkillsRes(hero: Hero, skills: List[Skill])
 }

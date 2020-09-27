@@ -23,7 +23,6 @@ import me.hoffmann.version.BuildInfo
 import sttp.tapir._
 import sttp.tapir.json.circe._
 import sttp.tapir.server.akkahttp._
-
 import scala.concurrent.{ ExecutionContext, Future }
 
 /**
@@ -44,7 +43,6 @@ class VersionRoute(implicit ec: ExecutionContext) {
     _ => Future.successful(Right(VersionDeployed(BuildInfo.builtAtString, BuildInfo.lastCommitHash)))
   )
 
-//  Docs.show(versionEndpoint)
 }
 object VersionRoute {
   case class VersionDeployed(buildDate: String, buildSha: String)

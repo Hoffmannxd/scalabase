@@ -37,14 +37,15 @@ val PrometheusVersion  = "0.0.9"
 val loggingDependencies = Seq(
   "com.typesafe.scala-logging" %% "scala-logging"  % "3.9.2",
   "ch.qos.logback"             % "logback-classic" % "1.2.3",
-  "org.codehaus.janino"        % "janino"          % "3.1.2"
+  "org.codehaus.janino"        % "janino"          % "3.1.2",
+  "com.github.pureconfig"      %% "pureconfig"     % "0.14.0"
 )
 
 val monitoringDependencies = Seq(
-  "io.prometheus" % "simpleclient"                              % PrometheusVersion,
-  "io.prometheus" % "simpleclient_hotspot"                      % PrometheusVersion,
-  "fr.davit"      %% "akka-http-me.hoffmann.metrics-core"       % AkkaMetricsVersion,
-  "fr.davit"      %% "akka-http-me.hoffmann.metrics-prometheus" % AkkaMetricsVersion
+  "io.prometheus" % "simpleclient"                  % PrometheusVersion,
+  "io.prometheus" % "simpleclient_hotspot"          % PrometheusVersion,
+  "fr.davit"      %% "akka-http-metrics-core"       % AkkaMetricsVersion,
+  "fr.davit"      %% "akka-http-metrics-prometheus" % AkkaMetricsVersion
 )
 
 val httpDependencies = Seq(
@@ -101,6 +102,7 @@ lazy val server =
     .settings(settings)
     .settings(libraryDependencies ++= serverDependencies)
     .enablePlugins(AutomateHeaderPlugin, BuildInfoPlugin)
+    .settings(fork in run := true)
     .settings(buildInfoSettings)
 
 lazy val settings =
