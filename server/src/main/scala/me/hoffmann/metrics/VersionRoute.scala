@@ -34,7 +34,7 @@ class VersionRoute(implicit ec: ExecutionContext) {
 
   private val versionEndpoint: Endpoint[Unit, String, VersionDeployed, Any] =
     endpoint.get
-      .in("version")
+      .in("version" / path[String]("id"))
       .out(jsonBody[VersionDeployed])
       .errorOut(stringBody)
       .description("Return current version details.")
@@ -45,5 +45,6 @@ class VersionRoute(implicit ec: ExecutionContext) {
 
 }
 object VersionRoute {
+
   case class VersionDeployed(buildDate: String, buildSha: String)
 }

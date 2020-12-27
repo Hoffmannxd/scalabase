@@ -62,14 +62,17 @@ val tapir = Seq(
   "com.softwaremill.sttp.tapir" %% "tapir-swagger-ui-akka-http" % TapirVersion
 )
 
-val serverDependencies = loggingDependencies ++ httpDependencies ++ monitoringDependencies ++ tapir
+val dbDeps = Seq(
+  "io.getquill" %% "quill-jdbc" % "3.6.0-RC2"
+)
+val serverDependencies = loggingDependencies ++ httpDependencies ++ monitoringDependencies ++ tapir ++ dbDeps
 
 /// Projects
 
 val rootProjectName     = "scalabase"
 val toolKitModuleName   = "toolkit"
 val serverModuleName    = "server"
-val currentScalaVersion = "2.13.3"
+val currentScalaVersion = "2.13.4"
 
 lazy val root =
   project
